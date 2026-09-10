@@ -1,266 +1,98 @@
 import React, { useEffect, useState } from 'react';
 
+const emptyBooking = { id: '', name: '', email: '', destination: '', date: '' };
+
 const BookNow = () => {
     const [data, setData] = useState([]);
+    const [error, setError] = useState('');
     const [isFormUpdating, setIsFormUpdating] = useState(false);
-    const [Bookings, setBookings] = useState({
-        id: "",
-        name: "",
-        email: "",
-        destination: "",
-        date: ""
-    });
+    const [booking, setBooking] = useState(emptyBooking);
 
-    // Get All Bookings
-    useEffect(() => { 
-        getAllData();
-    }, []);
+    useEffect(() => { getAllData(); }, []);
 
     const getAllData = async () => {
-        await fetch("http://localhost:8000/bookings")
-            .then((res) => { return res.json() })
-            .then((res) => { setData(res) })
-    }
-
-
-    // Add Bookings
-    const addBookings = async (e) => {
-        e.preventDefault();
         try {
-            const res = await fetch("http://localhost:8000/bookings", {
-                method: "POST",
-                body: JSON.stringify(Bookings),
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
-            console.log(res);
-            if (res.ok) {
-                const result = await res.json();
-                alert("Booking Added Successfully!");
-                console.log(result);
-            } else {
-                console.error("Error:", res.statusText);
-            }
-            getAllData();
-        } catch (err) {
-            console.error("Error On Booking:", err);
+            const response = await fetch('http://localhost:8000/bookings');
+            if (!response.ok) throw new Error('Could not load bookings.');
+            setData(await response.json());
+            setError('');
+        } catch (requestError) {
+            setError('Booking service is unavailable. Start the backend and check the MongoDB connection.');
+            console.error('Error loading bookings:', requestError);
         }
     };
 
-    const handleChange = (e) => {
-        setBookings({
-            ...Bookings,
-            [e.target.name]: e.target.value
-        });
-    };
-    
+    const handleChange = (event) => setBooking({ ...booking, [event.target.name]: event.target.value });
 
-    // Delete Bookings
-    const deleteBookings = async (id) => {
+    const addBooking = async (event) => {
+        event.preventDefault();
         try {
-            const res = await fetch("http://localhost:8000/bookings/" + id, {
-                method: "DELETE"
-            });
-    
-            if (res.ok) {
-                alert("Booking Deleted Successfully!");
-                getAllData();
-            } else {
-                console.error("Error:", res.statusText);
-            }
-        } catch (err) {
-            console.error("Error On Deleting Booking:", err);
+            const response = await fetch('http://localhost:8000/bookings', { method: 'POST', body: JSON.stringify(booking), headers: { 'Content-Type': 'application/json' } });
+            if (!response.ok) throw new Error('Could not save the booking.');
+            setBooking(emptyBooking);
+            setError('');
+            await getAllData();
+        } catch (requestError) {
+            setError('Booking service is unavailable. Start the backend and check the MongoDB connection.');
+            console.error('Error creating booking:', requestError);
         }
     };
-    
 
-
-    // Update Bookings
-    const updateBookings = async (e) => {
-        e.preventDefault();
+    const updateBooking = async (event) => {
+        event.preventDefault();
         try {
-            const res = await fetch("http://localhost:8000/bookings/" + Bookings.id, {
-                method: "PUT",
-                body: JSON.stringify(Bookings),
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
-            if (res.ok) {
-                alert("Booking Updated successfully!");
-            } else {
-                console.error("Error:", res.statusText);
-            }
-            getAllData();
-            setIsFormUpdating(false);  // Reset update mode
-            setBookings({ id: "", name: "", email: "", destination: "", date: "" });  // Clear form after update
-        } catch (err) {
-            console.error("Error On Updating booking:", err);
+            const response = await fetch(`http://localhost:8000/bookings/${booking.id}`, { method: 'PUT', body: JSON.stringify(booking), headers: { 'Content-Type': 'application/json' } });
+            if (!response.ok) throw new Error('Could not update the booking.');
+            setBooking(emptyBooking);
+            setIsFormUpdating(false);
+            setError('');
+            await getAllData();
+        } catch (requestError) {
+            setError('Booking service is unavailable. Start the backend and check the MongoDB connection.');
+            console.error('Error updating booking:', requestError);
         }
     };
-    
 
-    // const updateBookings = async() =>{
-	// 	await fetch("http://localhost:8000/bookings/" + Bookings.id, {
-	// 		method: "PUT",
-	// 		body: JSON.stringify(Bookings),
-	// 		headers: {
-	// 			"Content-Type": "application/json"
-	// 		}
-	// 	});
-	// 	getAllData();
-	// }
-
+    const deleteBooking = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:8000/bookings/${id}`, { method: 'DELETE' });
+            if (!response.ok) throw new Error('Could not delete the booking.');
+            await getAllData();
+        } catch (requestError) {
+            setError('Booking service is unavailable. Start the backend and check the MongoDB connection.');
+            console.error('Error deleting booking:', requestError);
+        }
+    };
 
     return (
-        <>
-            <div className="bg-image"
-                style={{
-                    backgroundImage: "url('https://img.freepik.com/premium-photo/soft-blur-nature-background-abstract-modern-website-graphics-with-smooth-gradient-background_532332-40.jpg')",
-                    backgroundRepeat: "no-repeat",
-                    backgroundSize: "100% 100%",
-                    height: "auto"
-                }}>
-                <div className='bg-image opacity-50'
-                    style={{
-                        backgroundImage: "url('https://media.istockphoto.com/id/1097481110/photo/passenger-plane-business-trip-travel-concept-flying-evening-sunset.jpg?s=612x612&w=0&k=20&c=f2itQWoW1ObaBI0wCQsaT2s7cpo5a_CIqEQItDW8g90=')",
-                        backgroundRepeat: "no-repeat",
-                        backgroundSize: "100% 100%",
-                        height: "40vh",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center"
-                    }}
-                >
-                    <h1 className='text-center text-dark' style={{ fontWeight: "bold", fontSize: "4rem"}}>
-                        <b>Arrived</b>
-                    </h1>
-                    <p className='text-center text-dark' style={{ fontWeight: "bold", fontSize: "2rem"}}>
-                        <i>Unlock the best in Travel!</i>
-                    </p>
-                </div>
-                <div className="container">
-                    <h1 className="text-center text-dark"><b>Book Your Destination</b></h1>
-                    <form className="mt-4" onSubmit={addBookings}>
-                        <div className="mb-3">
-                            <label className="form-label">Booking ID</label>
-                            <input
-                                type="number"
-                                className="form-control"
-                                name="id"
-                                placeholder='Enter Booking ID'
-                                value={Bookings.id}
-                                onChange={handleChange}
-                                required
-                                disabled={isFormUpdating}
-                            />
-                        </div>
-                        <div className="mb-3">
-                            <label className="form-label">Full Name</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="name"
-                                placeholder='Please Enter Your Full Name'
-                                value={Bookings.name}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                        <div className="mb-3">
-                            <label className="form-label">Email</label>
-                            <input
-                                type="email"
-                                className="form-control"
-                                name="email"
-                                placeholder='Please Enter Your E-mail'
-                                value={Bookings.email}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                        <div className="mb-3">
-                            <label className="form-label">Destination</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="destination"
-                                placeholder='Please Enter Your Dream Place'
-                                value={Bookings.destination}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                        <div className="mb-3">
-                            <label className="form-label">Travel Date</label>
-                            <input
-                                type="date"
-                                className="form-control"
-                                name="date"
-                                value={Bookings.date}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div><br />
-                        {
-                            isFormUpdating ? <button className="btn btn-outline-warning text-light"
-                                style={{ marginTop: "20px", marginLeft: "600px", width: "200px", fontSize: "20px" }}
-                                onClick={updateBookings}>Update</button> : <button type="submit" className="btn btn-outline-secondary text-light"
-                                    style={{ marginTop: "20px", marginLeft: "600px", width: "200px", fontSize: "20px" }}>
-                                Submit
-                            </button>
-                        }
-                    </form>
-
-                    <h2 className='text-center mt-5 text-light fs-1'><b>Bookings That Are Already Done!</b></h2>
-
-                    <table className="table mt-4 border-4 border-dark bg-success">
-                        <thead className='text-center'>
-                            <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Destination</th>
-                                <th>Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                data.map((Bookings) => {
-                                    return (
-                                        <tr className='mt-3 rounded-4 text-center' key={Bookings.id}>
-                                            <td>{Bookings.id}</td>
-                                            <td>{Bookings.name}</td>
-                                            <td>{Bookings.email}</td>
-                                            <td>{Bookings.destination}</td>
-                                            <td>{Bookings.date}</td>
-                                            <td>
-                                            <button
-                                                className='btn btn-outline-warning text-dark-emphasis'
-                                                onClick={() => {
-                                                    setIsFormUpdating(true);
-                                                    setBookings(Bookings);
-                                                }}>
-                                                Update
-                                            </button>
-                                            <button className='btn btn-outline-danger ms-3 text-dark-emphasis'
-                                                onClick={() => deleteBookings(Bookings.id)}>
-                                                Delete
-                                            </button>
-                                            </td>
-                                        </tr>
-                                    );
-                                })
-                            }
-                        </tbody>
-                    </table>
-
+        <main className="booking-page">
+            <div className="page-width">
+                <header className="booking-header">
+                    <div><p className="eyebrow">Your next chapter</p><h1>Make it<br /><em>real.</em></h1></div>
+                    <p>Tell us where you want to go. We will keep the details safe while you start imagining the good part.</p>
+                </header>
+                {error && <div className="booking-alert" role="alert">{error}</div>}
+                <div className="booking-layout">
+                    <section className="booking-panel">
+                        <p className="panel-label">{isFormUpdating ? 'Edit your booking' : 'Start planning'}</p>
+                        <form className="booking-form" onSubmit={isFormUpdating ? updateBooking : addBooking}>
+                            <div className="field"><label htmlFor="booking-id">Booking ID</label><input id="booking-id" type="number" name="id" placeholder="e.g. 104" value={booking.id} onChange={handleChange} required disabled={isFormUpdating} /></div>
+                            <div className="field"><label htmlFor="booking-name">Full name</label><input id="booking-name" type="text" name="name" placeholder="Your name" value={booking.name} onChange={handleChange} required /></div>
+                            <div className="field field-wide"><label htmlFor="booking-email">Email</label><input id="booking-email" type="email" name="email" placeholder="you@example.com" value={booking.email} onChange={handleChange} required /></div>
+                            <div className="field"><label htmlFor="booking-destination">Destination</label><input id="booking-destination" type="text" name="destination" placeholder="Where to?" value={booking.destination} onChange={handleChange} required /></div>
+                            <div className="field"><label htmlFor="booking-date">Travel date</label><input id="booking-date" type="date" name="date" value={booking.date} onChange={handleChange} required /></div>
+                            <button className="button button-primary form-submit" type="submit">{isFormUpdating ? 'Save changes' : 'Request this trip'} <span>↗</span></button>
+                        </form>
+                    </section>
+                    <section className="bookings-panel">
+                        <p className="panel-label">Your travel plans</p>
+                        <div className="bookings-table-wrap"><table className="bookings-table"><thead><tr><th>ID</th><th>Name</th><th>Destination</th><th>Date</th><th>Actions</th></tr></thead><tbody>{data.map((item) => <tr key={item.id}><td>{item.id}</td><td>{item.name}</td><td>{item.destination}</td><td>{new Date(item.date).toLocaleDateString()}</td><td><div className="table-actions"><button className="table-action" type="button" onClick={() => { setIsFormUpdating(true); setBooking(item); }}>Edit</button><button className="table-action delete" type="button" onClick={() => deleteBooking(item.id)}>Delete</button></div></td></tr>)}</tbody></table></div>
+                        {!data.length && <p className="section-copy">Your saved journeys will appear here.</p>}
+                    </section>
                 </div>
             </div>
-        </>
+        </main>
     );
-}
+};
 
 export default BookNow;

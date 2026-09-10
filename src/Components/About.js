@@ -1,50 +1,11 @@
-function About()
-{
-    return(
-        <>
-            <div className="bg-image" 
-            style={{ 
-                backgroundImage: "url('https://img.freepik.com/premium-photo/soft-blur-nature-background-abstract-modern-website-graphics-with-smooth-gradient-background_532332-40.jpg')", 
-                backgroundRepeat: "no-repeat",
-                backgroundSize:"100% 100%",
-                height: "auto" 
-            }}>
-                <div class="d-flex">
-                    <div>
-                        <p class="text-secondary-emphasis fst-italic">
-                            <h1 class="text-center">About Us</h1>
-                            Welcome to WanderWaves, your one-stop destination for all things travel! Whether you're an adventurous solo traveler, a family planning a vacation, or a couple looking for a romantic getaway, we’re here to make your travel dreams a reality.
-                            At WanderWaves, we believe in exploring the world without limits. From tropical beaches to bustling cities, we’re passionate about helping travelers discover new places, cultures, and experiences. Our goal is to provide seamless travel solutions by leveraging the power of technology, making trip planning easy and fun for everyone.
-                            <br/><br/>
-                            <h1>Why Choose Us?</h1>
-                                <ul>
-                                    <li><p> <b>Curated Destinations</b> : We handpick destinations based on your interests, whether you're a thrill-seeker, a history buff, or just looking for some relaxation.</p></li>
-                                    <li><p> <b>Real-Time Booking</b> : Book flights, hotels, and tours instantly. Our platform is powered by JavaScript technology, ensuring fast, secure, and reliable bookings.</p></li>
-                                    <li><p> <b>Personalized Travel Experiences</b> : Get tailored recommendations based on your preferences and travel history.</p></li>
-                                    <li><p> <b>Expert Travel Guides</b> : From locals' favorite spots to hidden gems, we partner with expert guides to offer authentic travel experiences.</p></li>
-                                </ul>
-                            <br/>
-                            <h1>OUR MISSION</h1>
-                            &nbsp;&nbsp;&nbsp;We strive to inspire wanderlust and make global exploration accessible to everyone. Whether it's your first trip or your hundredth, we’re here to help you every step of the way with innovative solutions that simplify planning and enhance your travel experience.
-                            <br/><br/>
-                            <h1>QUICK LINKS</h1>
-                            &nbsp;&nbsp;&nbsp;Delhi Chennai Flights, Delhi Mumbai Flights, Delhi Goa Flights, Chennai Mumbai flights, Mumbai Hyderabad flights, Kolkata 
-                            <br/><br/>
-                            <h1>IMPORTANT LINKS</h1>
-                            &nbsp;&nbsp;&nbsp;Cheap Flights, Flight Status, Kumbh Mela, Domestic Airlines, International Airlines, Indigo
-                            </p>
-                    </div>
-                    <div>
-                        <img src="https://i.pinimg.com/736x/57/d9/12/57d912449af2ec54bb79f46780854abb.jpg" 
-                            style={{width: "850px", height: "100vh", marginTop: "40px", borderRadius: "2000px", filter: "blur(10px);"}}
-                            class="opacity-75"
-                        />
-                    </div>
+import { Link } from 'react-router-dom';
 
-                </div>
-            </div>
-        </>
-    );
+function About() {
+    return <main className="inner-page">
+        <section className="inner-hero about-hero"><div className="page-width"><p className="eyebrow">The people behind the postcards</p><h1>Travel with<br /><em>intention.</em></h1></div></section>
+        <section className="page-width story-layout"><div><p className="eyebrow">Why we wander</p><h2>Good trips are<br /><em>felt, not rushed.</em></h2></div><div className="story-copy"><p>Welcome to Travel In New World, a small team of curious people who believe the best journeys leave room for surprise. We connect thoughtful travellers with places, hosts and experiences that feel genuinely theirs.</p><p>From a quiet beach morning to a table shared with new friends, we care about the details that turn a holiday into a story you keep telling.</p><Link className="button button-primary" to="/places/booknow">Plan your story <span>↗</span></Link></div></section>
+        <section className="values-section"><div className="page-width"><p className="eyebrow">What guides us</p><div className="values-grid"><article><span>01</span><h3>Curated, never crowded</h3><p>We choose places for their character, not their popularity.</p></article><article><span>02</span><h3>Local at heart</h3><p>Real recommendations from people who know a place intimately.</p></article><article><span>03</span><h3>Easy by design</h3><p>Clear planning, human support and space to enjoy the journey.</p></article></div></div></section>
+    </main>;
 }
 
 export default About;

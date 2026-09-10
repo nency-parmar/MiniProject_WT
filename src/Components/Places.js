@@ -1,355 +1,46 @@
-import { Link } from "react-router-dom";
-function Places()
-{
-    return(
-        <>
-            <div className="bg-image" 
-            style={{ 
-                backgroundImage: "url('https://img.freepik.com/premium-photo/soft-blur-nature-background-abstract-modern-website-graphics-with-smooth-gradient-background_532332-40.jpg')", 
-                backgroundRepeat: "no-repeat",
-                backgroundSize:"100% 100%",
-                height: "auto" 
-            }}>
-                
-                <div className="p-4">
-                    <h1 className="text-center text-bg-dark"
-                        style={{fontFamily:"monospace"}}
-                    >Find Your Destination...</h1>
-                    <div class="container mt-5">
-                        <form class="d-flex" role="search">
-                        <input class="form-control me-2 bg-success-subtle" type="search" placeholder="Search Your Destination Here!" aria-label="Search"/>
-                        <button class="btn btn-outline-secondary text-light" type="submit">
-                            Go To Your Destination
-                        </button>
-                        </form>
-                    </div>
+import { Link } from 'react-router-dom';
+import { useState } from 'react';
 
-                    <h1 className="mt-5 text-center text-warning-emphasis"
-                    style={{fontFamily:"monospace"}}>Our Most Popular Places</h1>
+const places = [
+    ['Goa', 'Coastal calm', 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=900&q=85'],
+    ['Manali', 'Mountain air', 'https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=900&q=85'],
+    ['Kashmir', 'Still waters', 'https://images.unsplash.com/photo-1595815771614-ade9d652a65d?auto=format&fit=crop&w=900&q=85'],
+    ['Kerala', 'Backwater days', 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=900&q=85'],
+    ['Ladakh', 'High roads', 'https://images.unsplash.com/photo-1533130061792-64b345e4a833?auto=format&fit=crop&w=900&q=85'],
+    ['Udaipur', 'Golden hours', 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=900&q=85'],
+    ['Andaman', 'Island time', 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=85'],
+    ['Taj Mahal', 'Timeless wonder', 'https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=900&q=85'],
+    ['Alleppey', 'Houseboat mornings', 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=900&q=85'],
+    ['Darjeeling', 'Tea country', 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=900&q=85'],
+    ['Amritsar', 'Golden history', 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=900&q=85'],
+    ['Gulmarg', 'Snow stories', 'https://images.unsplash.com/photo-1551524559-8af4e6624178?auto=format&fit=crop&w=900&q=85'],
+    ['Srinagar', 'Lake light', 'https://images.unsplash.com/photo-1595815771614-ade9d652a65d?auto=format&fit=crop&w=900&q=85'],
+    ['Lakshadweep', 'Blue horizons', 'https://images.unsplash.com/photo-1493552152660-f915ab47ae9d?auto=format&fit=crop&w=900&q=85'],
+    ['Ooty', 'Green escapes', 'https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=900&q=85'],
+    ['Rishikesh', 'River energy', 'https://images.unsplash.com/photo-1598091383021-15ddea10925d?auto=format&fit=crop&w=900&q=85'],
+    ['Shimla', 'Pine air', 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=85'],
+    ['Nainital', 'Lake retreat', 'https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=900&q=85'],
+    ['Mussoorie', 'Hill walks', 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=85'],
+    ['Pondicherry', 'French afternoons', 'https://images.unsplash.com/photo-1507521731446-7f8c7a8b7a5b?auto=format&fit=crop&w=900&q=85'],
+    ['Leh', 'High desert', 'https://images.unsplash.com/photo-1533130061792-64b345e4a833?auto=format&fit=crop&w=900&q=85'],
+    ['Havelock Islands', 'Island time', 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=85'],
+    ['Mahabaleshwar', 'Forest roads', 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=85'],
+    ['Lavasa', 'Lakeside calm', 'https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=900&q=85'],
+    ['Kasauli', 'Quiet hills', 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=85'],
+    ['Assam', 'Tea and wild', 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=900&q=85'],
+    ['Meghalaya', 'Cloud country', 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=85'],
+    ['Nagaland', 'Living culture', 'https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=900&q=85'],
+    ['Karnataka', 'Coast and coffee', 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=900&q=85'],
+    ['Himachal Pradesh', 'Mountain country', 'https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=900&q=85'],
+    ['Delhi', 'Old soul, new energy', 'https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=900&q=85'],
+    ['Mumbai', 'City by the sea', 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=900&q=85'],
+    ['Lonavala', 'Monsoon green', 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=85']
+];
 
-                    <div>
-                        <div className="d-flex">
-                            <div class="d-flex justify-content-between p-5">
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://www.affordableluxurytravel.co.uk/blog/wp-content/uploads/2023/10/visit-goa.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>GOA</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://www.holidify.com/images/bgImages/MANALI.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>MANALI</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://cliffhangersindia.com/wp-content/uploads/2024/04/divya-agrawal-qa8VhqvJGIo-unsplash-2-scaled.jpg.webp" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>KASHMIR</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://www.ghumindiaghum.com/blog/wp-content/uploads/2023/06/Kerala-Tourism.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>KERALA</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://www.holidify.com/images/bgImages/LADAKH.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>LADAKH</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="d-flex">
-                            <div class="d-flex justify-content-between p-5">
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://www.holidify.com/images/bgImages/UDAIPUR.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>UDAIPUR</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://www.holidify.com/images/bgImages/ANDAMAN-NICOBAR-ISLANDS.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>ANDAMAN</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://www.holidify.com/images/bgImages/AGRA.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>TAJ MAHAL</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://www.holidify.com/images/bgImages/ALLEPPEY.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>ALLEPPEY</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://www.holidify.com/images/bgImages/DARJEELING.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>DARJEELING</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="d-flex">
-                            <div class="d-flex justify-content-between p-5">
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://www.holidify.com/images/bgImages/AMRITSAR.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>AMRITSAR</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://www.holidify.com/images/bgImages/GULMARG.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>GULMARG</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://www.holidify.com/images/bgImages/SRINAGAR.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>SRINAGAR</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://www.holidify.com/images/bgImages/LAKSHADWEEP-ISLANDS.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>LAKSHADWEEP</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://www.holidify.com/images/bgImages/OOTY.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>OOTY</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="d-flex">
-                            <div class="d-flex justify-content-between p-5">
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://www.holidify.com/images/bgImages/RISHIKESH.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>RISHIKESH</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://www.holidify.com/images/bgImages/SHIMLA.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>SHIMLA</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://www.holidify.com/images/bgImages/NAINITAL.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>NAINITAL</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://www.holidify.com/images/bgImages/MUSSOORIE.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>MUSSOORIE</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://www.holidify.com/images/bgImages/PONDICHERRY.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>PONDICHERRY</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="d-flex">
-                            <div class="d-flex justify-content-between p-5">
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://hblimg.mmtcdn.com/content/hubble/img/leh/mmt/destination/m_leh-landscape_l_400_640.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>LEH</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://hblimg.mmtcdn.com/content/hubble/img/havelock/mmt/destination/m_destination_havelock_landscape_l_400_640.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>HAVELOCK ISLANDS</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://hblimg.mmtcdn.com/content/hubble/img/new_dest_imagemar/mmt/activities/m_mahabaleshwar_3_l_648_1194.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>MAHABALESHWAR</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://hblimg.mmtcdn.com/content/hubble/img/new_dest_imagemar/mmt/activities/m_Lavasa_2_l_800_1200.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>LAVASA</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://hblimg.mmtcdn.com/content/hubble/img/kasauli/mmt/destination/m_destination-kasauli-landscape_l_400_640.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>KASAULI</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="d-flex">
-                            <div class="d-flex justify-content-between p-5">
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://hblimg.mmtcdn.com/content/hubble/img/states_img/mmt/activities/m_Assam_landscape_1_l_750_1000.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>ASSAM</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://hblimg.mmtcdn.com/content/hubble/img/states_img/mmt/activities/m_meghalaya_landscape_1_l_643_964.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>MEGHALAYA</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://hblimg.mmtcdn.com/content/hubble/img/states_img/mmt/activities/m_Nagaland_landscape_1_l_750_1000.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>NAGALAND</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://hblimg.mmtcdn.com/content/hubble/img/karnataka/mmt/destination/m_destination-karnataka-landscape_l_400_640.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>KARNATAKA</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://hblimg.mmtcdn.com/content/hubble/img/himachal/mmt/destination/m_destination-himachal-landscape_l_400_640.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>HIMACHAL PRADESH</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="d-flex">
-                            <div class="d-flex justify-content-between p-5">
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://www.holidify.com/images/bgImages/DELHI.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>DELHI</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://www.holidify.com/images/bgImages/MUMBAI.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>MUMBAI</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://www.holidify.com/images/bgImages/LONAVALA.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>LONAVALA</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://blog.lemontreehotels.com/wp-content/uploads/2018/09/Kankaria-Lake-night-hangout-places-in-ahmedabad.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>AHMEDABAD</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                                <div class="card m-2" style={{width: '18rem'}}>
-                                    <img src="https://hblimg.mmtcdn.com/content/hubble/img/additionalttdimages/mmt/activities/t_ufs/m_Statue_of_Unity_Ahmedabad_1_l_439_640.jpg" style={{height:285}} class="card-img-top" alt="..."/>
-                                    <div class="card-body bg-info-subtle">
-                                        <h5 class="card-title text-center"><b>STATUE OF UNITY</b></h5>
-                                        <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <div class="text-center"><Link to="BookNow" class="btn btn-outline-secondary">Book Now</Link></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-            
-        </>
-    );
+function Places() {
+    const [query, setQuery] = useState('');
+    const filteredPlaces = places.filter(([name, mood]) => `${name} ${mood}`.toLowerCase().includes(query.toLowerCase()));
+    return <main className="places-page inner-page"><section className="places-intro page-width"><p className="eyebrow">Go gently, go far</p><h1>Find your next<br /><em>somewhere.</em></h1><div className="places-search"><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search a destination or mood" aria-label="Search destinations" /><span>⌕</span></div></section><section className="places-grid page-width">{filteredPlaces.map(([name, mood, image]) => <article className="place-card" key={name}><img src={image} alt={name} /><div><p>{mood}</p><h2>{name}</h2><Link to="/places/booknow">Plan this trip <span>↗</span></Link></div></article>)}</section>{!filteredPlaces.length && <p className="page-width empty-state">No destination found yet. Try another feeling.</p>}</main>;
 }
 
 export default Places;

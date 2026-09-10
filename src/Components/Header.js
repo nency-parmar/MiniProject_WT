@@ -1,37 +1,34 @@
-import { Link, Outlet } from "react-router-dom";
-import React, { useRef } from 'react';
+import React, { useState } from 'react';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 
-function Header() 
-{
+function Header() {
+    const [menuOpen, setMenuOpen] = useState(false);
+    const location = useLocation();
+    const links = [
+        { label: 'Home', path: '/' },
+        { label: 'About', path: '/about' },
+        { label: 'Places', path: '/places' },
+        { label: 'Services', path: '/services' },
+        { label: 'Contact', path: '/contact' }
+    ];
+
     return (
         <>
-            <nav class="navbar  bg-body-tertiary bg-success-subtle">
-                <div class="container" 
-                // style={{position:"fixed"}}
-                >
-                    <Link class="navbar-brand" to="#">
-                    <div class="float-start"><img src="https://www.shutterstock.com/image-vector/tnw-logo-design-inspiration-unique-260nw-2358766697.jpg" alt="Logo" width="55" height="60" class="d-inline-block align-text-center" />
-                    </div><div class="float-start ms-2 text-center"><b>Travel</b><br/><small class="text-muted">In New World</small></div>
+            <header className={`site-header ${location.pathname === '/' ? '' : 'site-header-inner'}`}>
+                <div className="nav-shell">
+                    <Link className="brand" to="/" onClick={() => setMenuOpen(false)}>
+                        <span className="brand-mark">tnw</span>
+                        <span className="brand-copy"><strong>Travel</strong><small>In New World</small></span>
                     </Link>
-                    <ul class="nav justify-content-end fs-4">
-                        <li class="nav-item">
-                            <Link class="nav-link text-dark-emphasis hover-link" aria-current="page" to="Home">Home</Link>
-                        </li>
-                        <li class="nav-item">
-                            <Link class="nav-link text-dark-emphasis hover-link" to="About">About Us</Link>
-                        </li>
-                        <li class="nav-item">
-                            <Link class="nav-link text-dark-emphasis hover-link" to="Contact">Contact Us</Link>
-                        </li>
-                        <li class="nav-item">
-                            <Link class="nav-link text-dark-emphasis hover-link" to="Places">Places</Link>
-                        </li>
-                        <li class="nav-item">
-                            <Link class="nav-link text-dark-emphasis hover-link" to="Services">Services</Link>
-                        </li>
-                    </ul>
+                    <button className="menu-toggle" type="button" aria-label="Toggle navigation" onClick={() => setMenuOpen(!menuOpen)}>
+                        <span></span><span></span><span></span>
+                    </button>
+                    <nav className={`main-nav ${menuOpen ? 'is-open' : ''}`}>
+                        {links.map((link) => <Link key={link.path} className={location.pathname === link.path ? 'active' : ''} to={link.path} onClick={() => setMenuOpen(false)}>{link.label}</Link>)}
+                        <Link className="nav-cta" to="/places/booknow" onClick={() => setMenuOpen(false)}>Plan a trip <span>↗</span></Link>
+                    </nav>
                 </div>
-            </nav>
+            </header>
             <Outlet />
         </>
     );
